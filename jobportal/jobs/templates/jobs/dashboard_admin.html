@@ -1,0 +1,27 @@
+{% extends 'jobs/base.html' %}
+{% block title %}Admin Dashboard - JobPortal{% endblock %}
+
+{% block content %}
+<h3 class="mb-4">Admin Dashboard</h3>
+
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <div class="card p-4 text-center border-warning">
+            <h2 class="text-warning">{{ pending_users }}</h2>
+            <p>Users Pending Approval</p>
+            <a href="{% url 'admin_users' %}" class="btn btn-warning">Review Users</a>
+        </div>
+    </div>
+    <div class="col-md-6 mb-3">
+        <div class="card p-4 text-center border-info">
+            <h2 class="text-info">{{ pending_jobs }}</h2>
+            <p>Jobs Pending Approval</p>
+            <a href="{% url 'admin_jobs' %}" class="btn btn-info">Review Jobs</a>
+        </div>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a href="/admin/" class="btn btn-dark">Django Admin Panel</a>
+</div>
+{% endblock %}

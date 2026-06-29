@@ -1,0 +1,64 @@
+{% extends 'jobs/base.html' %}
+{% block title %}Home - JobPortal{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="p-5 mb-4 rounded-3" style="background: linear-gradient(135deg, #2c3e50, #3498db); color: white;">
+    <div class="container-fluid py-3 text-center">
+        <h1 class="display-5 fw-bold">Find Your Dream Job</h1>
+        <p class="col-md-8 fs-5 mx-auto">Connect with top companies. Apply for jobs. Build your career.</p>
+        <a href="{% url 'job_list' %}" class="btn btn-light btn-lg me-2">Browse Jobs</a>
+        {% if not user.is_authenticated %}
+            <a href="{% url 'register' %}" class="btn btn-outline-light btn-lg">Join Now</a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Stats Row -->
+<div class="row text-center mb-4">
+    <div class="col-md-4">
+        <div class="card p-4">
+            <h2 class="text-primary">{{ total_jobs }}+</h2>
+            <p class="text-muted">Active Jobs</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-4">
+            <h2 class="text-success">{{ total_users }}+</h2>
+            <p class="text-muted">Registered Users</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-4">
+            <h2 class="text-warning">100%</h2>
+            <p class="text-muted">Free to Use</p>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Jobs -->
+<h3 class="mb-3">Recent Job Openings</h3>
+<div class="row">
+    {% for job in recent_jobs %}
+    <div class="col-md-4 mb-3">
+        <div class="card h-100 p-3">
+            <h5>{{ job.title }}</h5>
+            <p class="text-muted mb-1">🏢 {{ job.company }}</p>
+            <p class="text-muted mb-1">📍 {{ job.location }}</p>
+            <span class="badge bg-info">{{ job.get_job_type_display }}</span>
+            <div class="mt-auto pt-3">
+                <a href="{% url 'job_detail' job.id %}" class="btn btn-sm btn-primary">View Details</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+        <p class="text-muted">No jobs posted yet. Check back soon!</p>
+    {% endfor %}
+</div>
+
+{% if recent_jobs %}
+<div class="text-center mt-3">
+    <a href="{% url 'job_list' %}" class="btn btn-outline-primary">See All Jobs →</a>
+</div>
+{% endif %}
+{% endblock %}

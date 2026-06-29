@@ -1,0 +1,67 @@
+{% extends 'jobs/base.html' %}
+{% block title %}Browse Jobs - JobPortal{% endblock %}
+
+{% block content %}
+<h3 class="mb-3">Browse Jobs</h3>
+
+<!-- Search Form -->
+<div class="card p-3 mb-4">
+    <form method="get">
+        <div class="row g-2">
+            <div class="col-md-4">
+                {{ form.keyword }}
+            </div>
+            <div class="col-md-3">
+                {{ form.location }}
+            </div>
+            <div class="col-md-3">
+                {{ form.job_type }}
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Search</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Job Results -->
+<p class="text-muted">{{ jobs.count }} job(s) found</p>
+
+<div class="row">
+    {% for job in jobs %}
+    <div class="col-md-6 mb-3">
+        <div class="card p-3 h-100">
+            <div class="d-flex justify-content-between">
+                <h5>{{ job.title }}</h5>
+                <span class="badge bg-info">{{ job.get_job_type_display }}</span>
+            </div>
+            <p class="text-muted mb-1">🏢 {{ job.company }}</p>
+            <p class="text-muted mb-1">📍 {{ job.location }}</p>
+            {% if job.salary %}
+                <p class="text-success mb-1">💰 {{ job.salary }}</p>
+            {% endif %}
+            <p class="text-danger mb-2">⏰ Apply by: {{ job.last_date|date:"d M Y" }}</p>
+            <p class="text-muted small">{{ job.description|truncatechars:100 }}</p>
+            <div class="mt-auto">
+                <a href="{% url 'job_detail' job.id %}" class="btn btn-sm btn-primary">View & Apply</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+        <div class="col-12">
+            <div class="card p-4 text-center text-muted">
+                <p>No jobs found. Try different search terms.</p>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Make search inputs look nicer */
+    .form-control, .form-select {
+        border-radius: 6px;
+    }
+</style>
+{% endblock %}

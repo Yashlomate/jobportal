@@ -1,0 +1,75 @@
+{% extends 'jobs/base.html' %}
+{% block title %}Applications - {{ job.title }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h4>Applications for: {{ job.title }}</h4>
+        <p class="text-muted">{{ job.company }}</p>
+    </div>
+    <a href="{% url 'dashboard' %}" class="btn btn-secondary">← Back</a>
+</div>
+
+{% if applications %}
+<div class="table-responsive">
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Applicant</th>
+                <th>Email</th>
+                <th>Resume</th>
+                <th>Cover Letter</th>
+                <th>Applied On</th>
+                <th>Status</th>
+                <th>Update</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for app in applications %}
+            <tr>
+                <td>{{ app.applicant.get_full_name|default:app.applicant.username }}</td>
+                <td>{{ app.applicant.email }}</td>
+                <td>
+                    {% if app.applicant.userprofile.resume %}
+                        <a href="{{ app.applicant.userprofile.resume.url }}" target="_blank">📄 View</a>
+                    {% else %}
+                        <span class="text-muted">No resume</span>
+                    {% endif %}
+                </td>
+                <td>{{ app.cover_letter|truncatechars:50|default:"-" }}</td>
+                <td>{{ app.applied_at|date:"d M Y" }}</td>
+                <td>
+                    {% if app.status == 'shortlisted' %}
+                        <span class="badge bg-success">Shortlisted</span>
+                    {% elif app.status == 'rejected' %}
+                        <span class="badge bg-danger">Rejected</span>
+                    {% elif app.status == 'reviewed' %}
+                        <span class="badge bg-info">Reviewed</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Applied</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <!-- Quick status update form -->
+                    <form method="post" action="{% url 'update_application' app.id %}">
+                        {% csrf_token %}
+                        <select name="status" class="form-select form-select-sm d-inline w-auto">
+                            <option value="applied" {% if app.status == 'applied' %}selected{% endif %}>Applied</option>
+                            <option value="reviewed" {% if app.status == 'reviewed' %}selected{% endif %}>Reviewed</option>
+                            <option value="shortlisted" {% if app.status == 'shortlisted' %}selected{% endif %}>Shortlist</option>
+                            <option value="rejected" {% if app.status == 'rejected' %}selected{% endif %}>Reject</option>
+                        </select>
+                        <button type="submit" class="btn btn-sm btn-primary ms-1">Save</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="card p-4 text-center text-muted">
+    <p>No applications received yet for this job.</p>
+</div>
+{% endif %}
+{% endblock %}

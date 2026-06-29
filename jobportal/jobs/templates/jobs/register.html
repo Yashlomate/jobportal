@@ -1,0 +1,83 @@
+{% extends 'jobs/base.html' %}
+{% block title %}Register - JobPortal{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card p-4">
+            <h3 class="text-center mb-4">Create Account</h3>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label>First Name</label>
+                        {{ form.first_name.errors }}
+                        <input type="text" name="first_name" class="form-control"
+                               value="{{ form.first_name.value|default:'' }}" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Last Name</label>
+                        <input type="text" name="last_name" class="form-control"
+                               value="{{ form.last_name.value|default:'' }}" required>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label>Username</label>
+                    {{ form.username.errors }}
+                    <input type="text" name="username" class="form-control"
+                           value="{{ form.username.value|default:'' }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label>Email</label>
+                    <input type="email" name="email" class="form-control"
+                           value="{{ form.email.value|default:'' }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label>Phone (optional)</label>
+                    <input type="text" name="phone" class="form-control"
+                           value="{{ form.phone.value|default:'' }}">
+                </div>
+
+                <div class="mb-3">
+                    <label>I am a</label>
+                    <select name="role" class="form-select">
+                        <option value="applicant">Job Seeker (Applicant)</option>
+                        <option value="recruiter">Recruiter / Employer</option>
+                    </select>
+                </div>
+
+                <div class="mb-3" id="company-field">
+                    <label>Company Name (if recruiter)</label>
+                    <input type="text" name="company_name" class="form-control"
+                           value="{{ form.company_name.value|default:'' }}">
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label>Password</label>
+                        {{ form.password1.errors }}
+                        <input type="password" name="password1" class="form-control" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Confirm Password</label>
+                        {{ form.password2.errors }}
+                        <input type="password" name="password2" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="alert alert-info">
+                    ℹ️ Your account needs admin approval before you can login.
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Register</button>
+                <p class="text-center mt-3">Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

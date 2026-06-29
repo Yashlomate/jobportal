@@ -1,0 +1,58 @@
+{% extends 'jobs/base.html' %}
+{% block title %}Dashboard - JobPortal{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3>My Dashboard</h3>
+    <a href="{% url 'job_list' %}" class="btn btn-primary">Browse Jobs</a>
+</div>
+
+{% if not profile.resume %}
+<div class="alert alert-warning">
+    ⚠️ You haven't uploaded your resume yet!
+    <a href="{% url 'profile' %}" class="alert-link">Upload it here</a>
+</div>
+{% endif %}
+
+<h5>My Applications ({{ my_applications.count }})</h5>
+
+{% if my_applications %}
+<div class="table-responsive">
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Job Title</th>
+                <th>Company</th>
+                <th>Applied On</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for app in my_applications %}
+            <tr>
+                <td><a href="{% url 'job_detail' app.job.id %}">{{ app.job.title }}</a></td>
+                <td>{{ app.job.company }}</td>
+                <td>{{ app.applied_at|date:"d M Y" }}</td>
+                <td>
+                    {% if app.status == 'shortlisted' %}
+                        <span class="badge bg-success">Shortlisted</span>
+                    {% elif app.status == 'rejected' %}
+                        <span class="badge bg-danger">Rejected</span>
+                    {% elif app.status == 'reviewed' %}
+                        <span class="badge bg-info">Reviewed</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Applied</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="card p-4 text-center text-muted">
+    <p>You haven't applied to any jobs yet.</p>
+    <a href="{% url 'job_list' %}" class="btn btn-primary">Find Jobs</a>
+</div>
+{% endif %}
+{% endblock %}

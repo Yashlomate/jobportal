@@ -1,0 +1,83 @@
+{% extends 'jobs/base.html' %}
+{% block title %}{% if edit %}Edit Job{% else %}Post Job{% endif %} - JobPortal{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card p-4">
+            <h3 class="mb-4">{% if edit %}Edit Job Posting{% else %}Post a New Job{% endif %}</h3>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label>Job Title *</label>
+                        {{ form.title }}
+                        {{ form.title.errors }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Company *</label>
+                        {{ form.company }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label>Location *</label>
+                        {{ form.location }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Job Type *</label>
+                        {{ form.job_type }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label>Salary (optional)</label>
+                        {{ form.salary }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Last Date to Apply *</label>
+                        {{ form.last_date }}
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label>Job Description *</label>
+                    {{ form.description }}
+                </div>
+
+                <div class="mb-3">
+                    <label>Requirements *</label>
+                    {{ form.requirements }}
+                </div>
+
+                <div class="alert alert-info small">
+                    ℹ️ Your job will be reviewed by admin before it goes live.
+                </div>
+
+                <button type="submit" class="btn btn-success">
+                    {% if edit %}Update Job{% else %}Post Job{% endif %}
+                </button>
+                <a href="{% url 'dashboard' %}" class="btn btn-secondary ms-2">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Auto-style all form fields from Django form */
+    input, select, textarea {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #ced4da;
+        border-radius: 6px;
+        margin-top: 4px;
+    }
+    select { padding: 9px 12px; }
+</style>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'jobs/base.html' %}
+{% block title %}Recruiter Dashboard - JobPortal{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3>Recruiter Dashboard</h3>
+    <a href="{% url 'post_job' %}" class="btn btn-success">+ Post New Job</a>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-center p-3">
+            <h4 class="text-primary">{{ my_jobs.count }}</h4>
+            <p class="text-muted">Total Jobs Posted</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center p-3">
+            <h4 class="text-success">{{ total_applications }}</h4>
+            <p class="text-muted">Total Applications</p>
+        </div>
+    </div>
+</div>
+
+<h5>My Job Postings</h5>
+{% if my_jobs %}
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Title</th><th>Location</th><th>Type</th>
+                <th>Status</th><th>Posted</th><th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for job in my_jobs %}
+            <tr>
+                <td>{{ job.title }}</td>
+                <td>{{ job.location }}</td>
+                <td>{{ job.get_job_type_display }}</td>
+                <td>
+                    {% if job.status == 'approved' %}
+                        <span class="badge bg-success">Approved</span>
+                    {% elif job.status == 'rejected' %}
+                        <span class="badge bg-danger">Rejected</span>
+                    {% else %}
+                        <span class="badge bg-warning text-dark">Pending</span>
+                    {% endif %}
+                </td>
+                <td>{{ job.created_at|date:"d M Y" }}</td>
+                <td>
+                    <a href="{% url 'view_applications' job.id %}" class="btn btn-sm btn-info">Applications</a>
+                    <a href="{% url 'edit_job' job.id %}" class="btn btn-sm btn-warning">Edit</a>
+                    <form method="post" action="{% url 'delete_job' job.id %}" class="d-inline"
+                          onsubmit="return confirm('Delete this job?')">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="card p-4 text-center text-muted">
+    <p>You haven't posted any jobs yet.</p>
+    <a href="{% url 'post_job' %}" class="btn btn-success">Post Your First Job</a>
+</div>
+{% endif %}
+{% endblock %}
